@@ -1,0 +1,75 @@
+version: "3.8"
+
+secrets:
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - USER_SERVICE_URL=http://user-service:3001
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    depends_on:
+      - user-service
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "3001:3001"
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+
+  billing-service:
+    build: ./billing-service
+    ports:
+      - "3002:3002"
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+
+  payments-service:
+    build: ./payments-service
+    ports:
+      - "3003:3003"
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+
+  notifications-service:
+    build: ./notifications-service
+    ports:
+      - "3004:3004"
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+
+  analytics-service:
+    build: ./analytics-service
+    ports:
+      - "3005:3005"
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+
+  admin-service:
+    build: ./admin-service
+    ports:
+      - "3006:3006"
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+
+  frontend-service:
+    build: ./frontend-service
+    ports:
+      - "3007:3007"
+    secrets:
+      - jwt_secret
+    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
