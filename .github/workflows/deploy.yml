@@ -50,19 +50,6 @@ jobs:
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
 
-      - name: Install NGINX Ingress Controller
-        run: |
-          helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-            --namespace ingress-nginx \
-            --create-namespace \
-            --set controller.publishService.enabled=true
-
-      - name: Wait for NGINX Controller
-        run: |
-          kubectl rollout status deployment/ingress-nginx-controller \
-            --namespace ingress-nginx \
-            --timeout=300s
-
       - name: Apply K8s Deployments
         run: |
           kubectl apply -f k8s/ --recursive
