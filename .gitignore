@@ -2,3 +2,5 @@
 node_modules/
 secrets/
 .k8s/secrets.yaml
+linux-amd64/
+helm-v3.18.4-linux-amd64.tar.gz
