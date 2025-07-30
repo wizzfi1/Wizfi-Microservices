@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'services/**'
+      - '**/Dockerfile'
       - '.github/workflows/deploy-images.yml'
 
 env:
-  DOCKER_USER: wizfi 
+  DOCKER_USER: wizfi
 
 jobs:
   build-and-push:
@@ -27,40 +27,40 @@ jobs:
 
       - name: Build & push auth-service
         run: |
-          docker build -t $DOCKER_USER/auth-service:latest ./services/auth
+          docker build -t $DOCKER_USER/auth-service:latest ./auth-service
           docker push $DOCKER_USER/auth-service:latest
 
       - name: Build & push user-service
         run: |
-          docker build -t $DOCKER_USER/user-service:latest ./services/user
+          docker build -t $DOCKER_USER/user-service:latest ./user-service
           docker push $DOCKER_USER/user-service:latest
 
       - name: Build & push billing-service
         run: |
-          docker build -t $DOCKER_USER/billing-service:latest ./services/billing
+          docker build -t $DOCKER_USER/billing-service:latest ./billing-service
           docker push $DOCKER_USER/billing-service:latest
 
       - name: Build & push payments-service
         run: |
-          docker build -t $DOCKER_USER/payments-service:latest ./services/payments
+          docker build -t $DOCKER_USER/payments-service:latest ./payments-service
           docker push $DOCKER_USER/payments-service:latest
 
       - name: Build & push notifications-service
         run: |
-          docker build -t $DOCKER_USER/notifications-service:latest ./services/notifications
+          docker build -t $DOCKER_USER/notifications-service:latest ./notifications-service
           docker push $DOCKER_USER/notifications-service:latest
 
       - name: Build & push analytics-service
         run: |
-          docker build -t $DOCKER_USER/analytics-service:latest ./services/analytics
+          docker build -t $DOCKER_USER/analytics-service:latest ./analytics-service
           docker push $DOCKER_USER/analytics-service:latest
 
       - name: Build & push admin-service
         run: |
-          docker build -t $DOCKER_USER/admin-service:latest ./services/admin
+          docker build -t $DOCKER_USER/admin-service:latest ./admin-service
           docker push $DOCKER_USER/admin-service:latest
 
       - name: Build & push frontend-service
         run: |
-          docker build -t $DOCKER_USER/frontend-service:latest ./services/frontend
+          docker build -t $DOCKER_USER/frontend-service:latest ./frontend-service
           docker push $DOCKER_USER/frontend-service:latest
