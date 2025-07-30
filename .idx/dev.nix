@@ -6,8 +6,11 @@
      pkgs.python311
      pkgs.python311Packages.pip
      pkgs.nodejs_20
+     pkgs.helm
      pkgs.nodePackages.nodemon
      pkgs.docker
+     pkgs.eksctl
+     pkgs.openssl_3_3.bin
      pkgs.prometheus.cli 
      pkgs.docker-client
      pkgs.openssh
