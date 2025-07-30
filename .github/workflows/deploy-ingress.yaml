@@ -47,7 +47,10 @@ jobs:
           helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
             --namespace ingress-nginx \
             --create-namespace \
-            --set controller.publishService.enabled=true
+            --wait \
+            --timeout 5m \
+            --set controller.publishService.enabled=true \
+            --set admissionWebhooks.enabled=false
 
       - name: Apply Wizfi Ingress
         run: |
