@@ -21,10 +21,20 @@ spec:
           env:
             - name: PORT
               value: "3000"
-            - name: USER_SERVICE_URL
-              value: "http://user-service:3001"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_SECRET
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
