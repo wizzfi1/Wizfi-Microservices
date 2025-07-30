@@ -1,7 +1,7 @@
 .env
 node_modules/
 secrets/
-k8s/secrets.yaml
+k8s/*secrets.yaml
 linux-amd64/
 /helm
 **/bin/k3s
