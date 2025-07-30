@@ -1,11 +1,80 @@
 .env
 node_modules/
 secrets/
-.k8s/secrets.yaml
+.k8s/secrets
 linux-amd64/
 /helm
 **/bin/k3s
 *.tar.gz
 *.zip
 *.exe
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# dotenv
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+
+# System
+*.swp
+*.swo
+
+# Docker
+docker-compose.override.yml
+
+# Helm or k3s artifacts
+helm/
+data/
+bin/
+charts/
+
+# Kubernetes
+*.yaml~
+*.bak
+k3s/
+.kube/
+
+# Python (if used)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDX/Nix
+result
+.result/
+.cache/
+.python-version
+venv/
+.envrc
+*.nix-channels
+
+# Git filter leftovers
+.git-rewrite/
+
+# Others
+coverage/
+dist/
+build/
+
 
