@@ -5,6 +5,10 @@ metadata:
   namespace: wizfi
 spec:
   replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: analytics-service
@@ -38,3 +42,10 @@ spec:
               port: 3005
             initialDelaySeconds: 5
             periodSeconds: 10
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"

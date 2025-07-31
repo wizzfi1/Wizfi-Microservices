@@ -5,6 +5,11 @@ metadata:
   namespace: wizfi
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: auth-service
@@ -38,3 +43,10 @@ spec:
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
