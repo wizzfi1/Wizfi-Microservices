@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-manager-webhook-duckdns
+  namespace: cert-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cert-manager-webhook-duckdns
+  template:
+    metadata:
+      labels:
+        app: cert-manager-webhook-duckdns
+    spec:
+      containers:
+        - name: webhook
+          image: docker.io/wisdomshaibu/cert-manager-webhook-duckdns:v1.6.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 443
+              name: https
+          env:
+            - name: DUCKDNS_TOKEN
+              value: "997f7b2c-ce52-426f-aea3-b5882e8c728f"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cert-manager-webhook-duckdns
+  namespace: cert-manager
+spec:
+  selector:
+    app: cert-manager-webhook-duckdns
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: https
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: cert-manager-webhook-duckdns
+webhooks:
+  - name: webhook.cert-manager-webhook-duckdns.cert-manager.svc
+    rules:
+      - apiGroups: ["acme.wizfiservices.duckdns"]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["*/*"]
+    clientConfig:
+      service:
+        name: cert-manager-webhook-duckdns
+        namespace: cert-manager
+        path: "/validate"
+      caBundle: ""
+    admissionReviewVersions: ["v1"]
+    sideEffects: None

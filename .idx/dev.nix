@@ -9,6 +9,7 @@
      pkgs.helm
      pkgs.nodePackages.nodemon
      pkgs.docker
+     pkgs.dig.dnsutils
      pkgs.eksctl
      pkgs.openssl_3_3.bin
      pkgs.prometheus.cli 

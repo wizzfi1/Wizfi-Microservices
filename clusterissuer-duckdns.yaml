@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-duckdns
+spec:
+  acme:
+    email: shaibuuneks@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-duckdns-account-key
+    solvers:
+      - dns01:
+          webhook:
+            groupName: acme.wizfiservices.duckdns
+            solverName: duckdns
+            config:
+              tokenSecretRef:
+                name: duckdns-api-token
+                key: token

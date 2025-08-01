@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wizfi-certs
+  namespace: wizfi
+spec:
+  secretName: wizfi-tls
+  issuerRef:
+    name: letsencrypt-prod     
+    kind: ClusterIssuer
+  dnsNames:
+    - wizfiservices.duckdns.org
+    - auth.wizfiservices.duckdns.org
+    - user.wizfiservices.duckdns.org
+    - billing.wizfiservices.duckdns.org
+    - payments.wizfiservices.duckdns.org
+    - notify.wizfiservices.duckdns.org
+    - analytics.wizfiservices.duckdns.org
+    - admin.wizfiservices.duckdns.org

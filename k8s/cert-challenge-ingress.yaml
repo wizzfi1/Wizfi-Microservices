@@ -1,0 +1,90 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cert-challenge-ingress
+  namespace: wizfi
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+    - host: auth.wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+    - host: user.wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+    - host: billing.wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+    - host: payments.wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+    - host: notify.wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+    - host: analytics.wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+    - host: admin.wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
