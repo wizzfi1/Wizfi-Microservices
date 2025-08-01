@@ -1,0 +1,14 @@
+token:
+  value: "997f7b2c-ce52-426f-aea3-b5882e8c728f"
+
+certManager:
+  namespace: cert-manager
+
+groupName: acme.wizfi.com
+
+clusterIssuer:
+  email: wizfi@example.com
+  production:
+    create: true
+  staging:
+    create: true
