@@ -15,8 +15,9 @@
         "uid": "e7c215c9-3eeb-4124-9aa0-0e069aa5289b"
     },
     "spec": {
-    
-
+        "finalizers": [
+            "kubernetes"
+        ]
     },
     "status": {
         "conditions": [

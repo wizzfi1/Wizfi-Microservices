@@ -4,13 +4,6 @@ metadata:
   name: cert-manager
 
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: cert-manager-webhook-duckdns
-  namespace: cert-manager
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,15 +19,68 @@ spec:
       labels:
         app: cert-manager-webhook-duckdns
     spec:
-      serviceAccountName: cert-manager-webhook-duckdns
       containers:
         - name: webhook
-          image: docker.io/wisdomshaibu/cert-manager-webhook-duckdns:v1.6.1
-          imagePullPolicy: IfNotPresent
-          args:
-            - --v=2
-          env:
-            - name: DUCKDNS_TOKEN
-              value: "Y997f7b2c-ce52-426f-aea3-b5882e8c728f"
+          image: docker.io/wizshai/duckdns-webhook:v1
+          imagePullPolicy: Always
           ports:
             - containerPort: 443
+              name: https
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /tls
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cert-manager-webhook-duckdns
+  namespace: cert-manager
+spec:
+  ports:
+    - port: 443
+      targetPort: https
+  selector:
+    app: cert-manager-webhook-duckdns
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: cert-manager-webhook-duckdns
+webhooks:
+  - name: webhook.cert-manager-webhook-duckdns.cert-manager.svc
+    clientConfig:
+      service:
+        name: cert-manager-webhook-duckdns
+        namespace: cert-manager
+        path: "/mutate"
+      caBundle: Cg==
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["cert-manager.io"]
+        apiVersions: ["v1"]
+        resources: ["certificates"]
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: duckdns.az0ne.dev
+spec:
+  group: az0ne.dev
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+  scope: Namespaced
+  names:
+    plural: duckdns
+    singular: duckdns
+    kind: DuckDNS
