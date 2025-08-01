@@ -54,4 +54,4 @@ jobs:
 
       - name: Apply Wizfi Ingress
         run: |
-          kubectl apply -f k8s/wizfi-ingress.yaml
+          kubectl apply -f wizfi-ingress.yaml
