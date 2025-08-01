@@ -101,4 +101,4 @@ spec:
         - notify.wizfiservices.duckdns.org
         - analytics.wizfiservices.duckdns.org
         - admin.wizfiservices.duckdns.org
-      secretName: wizfi-wildcard-tls
+      secretName: wizfi-tls

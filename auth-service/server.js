@@ -61,6 +61,10 @@ app.get('/protected', authMiddleware, (req, res) => {
 
 app.get('/health', (req, res) => res.send('Auth service is healthy'));
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Auth Service!');
+});
+
 app.listen(PORT, () => {
   console.log(`Auth service running on port ${PORT}`);
 });
