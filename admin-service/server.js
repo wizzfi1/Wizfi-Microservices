@@ -22,6 +22,10 @@ app.get('/dashboard', authMiddleware, (req, res) => {
 
 app.get('/health', (req, res) => res.send('Admin service is healthy'));
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Admin Service!');
+});
+
 app.listen(PORT, () => {
   console.log(`Admin service running on port ${PORT}`);
 });

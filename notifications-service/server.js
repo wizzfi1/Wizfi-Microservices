@@ -14,6 +14,10 @@ app.post('/send-email', authMiddleware, (req, res) => {
 
 app.get('/health', (req, res) => res.send('Notifications service is healthy'));
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Notification Service!');
+});
+
 app.listen(PORT, () => {
   console.log(`Notifications service running on port ${PORT}`);
 });

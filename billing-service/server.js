@@ -14,6 +14,10 @@ app.get('/invoices', authMiddleware, (req, res) => {
 
 app.get('/health', (req, res) => res.send('Billing service is healthy'));
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Billing Service!');
+});
+
 app.listen(PORT, () => {
   console.log(`Billing service running on port ${PORT}`);
 });

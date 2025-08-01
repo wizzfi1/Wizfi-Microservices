@@ -26,6 +26,10 @@ app.get('/users/:username', (req, res) => {
 
 app.get('/health', (req, res) => res.send('User service is healthy'));
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the User Service!');
+});
+
 app.listen(PORT, () => {
   console.log(`User service running on port ${PORT}`);
 });

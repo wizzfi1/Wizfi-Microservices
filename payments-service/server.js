@@ -14,6 +14,10 @@ app.post('/charge', authMiddleware, (req, res) => {
 
 app.get('/health', (req, res) => res.send('Payments service is healthy'));
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Payments Service!');
+});
+
 app.listen(PORT, () => {
   console.log(`Payments service running on port ${PORT}`);
 });

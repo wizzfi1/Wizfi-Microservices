@@ -16,6 +16,10 @@ app.post('/track', authMiddleware, (req, res) => {
 
 app.get('/health', (req, res) => res.send('Analytics service is healthy'));
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Analytics Service!');
+});
+
 app.listen(PORT, () => {
   console.log(`Analytics service running on port ${PORT}`);
 });
