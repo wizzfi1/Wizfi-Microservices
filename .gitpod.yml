@@ -1,0 +1,10 @@
+image:
+  file: Dockerfile
+
+tasks:
+  - name: Setup
+    init: |
+      echo "🟢 Workspace ready with kubectl + aws-cli"
+    command: |
+      kubectl version --client
+      aws --version
