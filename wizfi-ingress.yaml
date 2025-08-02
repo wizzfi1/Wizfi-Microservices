@@ -8,84 +8,64 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-duckdns"
     acme.cert-manager.io/http01-edit-in-place: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
-    - host: auth.wizfiservices.duckdns.org
+    - host: wizfiservices.duckdns.org
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          - path: /auth(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-service
                 port:
                   number: 3000
-    - host: user.wizfiservices.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+          - path: /user(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: user-service
                 port:
                   number: 3001
-    - host: billing.wizfiservices.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+          - path: /billing(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: billing-service
                 port:
                   number: 3002
-    - host: payments.wizfiservices.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+          - path: /payments(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: payments-service
                 port:
                   number: 3003
-    - host: notify.wizfiservices.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+          - path: /notify(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: notifications-service
                 port:
                   number: 3004
-    - host: analytics.wizfiservices.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+          - path: /analytics(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: analytics-service
                 port:
                   number: 3005
-    - host: admin.wizfiservices.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+          - path: /admin(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: admin-service
                 port:
                   number: 3006
-    - host: wizfiservices.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
+          - path: /frontend(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: frontend-service
@@ -94,11 +74,4 @@ spec:
   tls:
     - hosts:
         - wizfiservices.duckdns.org
-        - auth.wizfiservices.duckdns.org
-        - user.wizfiservices.duckdns.org
-        - billing.wizfiservices.duckdns.org
-        - payments.wizfiservices.duckdns.org
-        - notify.wizfiservices.duckdns.org
-        - analytics.wizfiservices.duckdns.org
-        - admin.wizfiservices.duckdns.org
       secretName: wizfi-tls

@@ -17,7 +17,7 @@ app.get('/dashboard', async (req, res) => {
   try {
     const jwt = req.headers.authorization;
 
-    const adminRes = await axios.get('http://localhost:3006/dashboard', {
+    const adminRes = await axios.get('https://wizfiservices.duckdns.org/admin/dashboard', {
       headers: { Authorization: jwt }
     });
 
