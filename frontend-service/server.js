@@ -17,12 +17,14 @@ app.get('/frontend/dashboard', async (req, res) => {
   try {
     const jwt = req.headers.authorization;
 
-    const adminRes = await axios.get('https://wizfiservices.duckdns.org/admin/dashboard', {
+  
+    const adminRes = await axios.get('https://wizfiservices.duckdns.org/dashboard', {
       headers: { Authorization: jwt }
     });
 
     res.json(adminRes.data);
   } catch (err) {
+    console.error('Frontend failed to load dashboard:', err.message);
     res.status(500).send('Failed to load dashboard');
   }
 });

@@ -81,3 +81,5 @@ aws/
 values.yaml
 
 duckdns-update.sh
+
+duckdns-cronjob.yaml
