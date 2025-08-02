@@ -80,3 +80,4 @@ build/
 aws/
 values.yaml
 
+duckdns-update.sh
