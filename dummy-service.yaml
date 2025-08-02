@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dummy-service
+  namespace: monitoring
+spec:
+  selector:
+    app: does-not-exist
+  ports:
+    - port: 80
+      targetPort: 80

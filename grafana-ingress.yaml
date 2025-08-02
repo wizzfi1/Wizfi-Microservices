@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-grafana
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-http"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  rules:
+    - host: wizfi-grafana.duckdns.org
+      http:
+        paths:
+          #  ACME path must use ImplementationSpecific
+          - path: /.well-known/acme-challenge/
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-grafana
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - wizfi-grafana.duckdns.org
+      secretName: grafana-tls

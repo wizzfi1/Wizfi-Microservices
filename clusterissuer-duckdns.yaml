@@ -11,7 +11,7 @@ spec:
     solvers:
       - dns01:
           webhook:
-            groupName: az0ne.dev
+            groupName: acme.wizfi.com   
             solverName: duckdns
             config:
               tokenSecretRef:

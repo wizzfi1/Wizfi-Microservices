@@ -1,6 +1,7 @@
 token:
   value: "997f7b2c-ce52-426f-aea3-b5882e8c728f"
-
+  existingSecret: duckdns-api-token
+  existingSecretKey: token
 certManager:
   namespace: cert-manager
 
