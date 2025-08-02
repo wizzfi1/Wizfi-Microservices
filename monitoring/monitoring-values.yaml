@@ -1,0 +1,24 @@
+grafana:
+  enabled: true
+  adminPassword: "wizfiadmin"
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: "letsencrypt-duckdns"
+    hosts:
+      - wizfi-grafana.duckdns.org
+    tls:
+      - hosts:
+          - wizfi-grafana.duckdns.org
+        secretName: grafana-tls
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+kubePrometheusStack:
+  enabled: true
