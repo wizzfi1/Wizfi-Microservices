@@ -31,8 +31,10 @@ app.post('/login', async (req, res) => {
 
     return res.json({ token, user });
   } catch (err) {
-    return res.status(401).json({ error: 'User not found' });
-  }
+  console.error("Login error:", err.message || err.response?.data || err);
+  return res.status(401).json({ error: 'User not found', details: err.message });
+}
+
 });
 
 
