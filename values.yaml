@@ -7,7 +7,7 @@ certManager:
 groupName: acme.wizfi.com
 
 clusterIssuer:
-  email: wizfi@example.com
+  email: shaibuuneks@gmail.com
   production:
     create: true
   staging:

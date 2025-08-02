@@ -47,4 +47,4 @@ jobs:
           docker push $DOCKER_USER/notifications-service:latest
 
       - name: Apply Kubernetes manifests
-        run: kubectl apply -f k8s/notifications-service.yaml
+        run: kubectl apply -f k8s/notifications/service.yaml

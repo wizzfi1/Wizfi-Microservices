@@ -47,4 +47,4 @@ jobs:
           docker push $DOCKER_USER/auth-service:latest
 
       - name: Apply Kubernetes manifests
-        run: kubectl apply -f k8s/auth-service.yaml
+        run: kubectl apply -f k8s/auth/service.yaml
