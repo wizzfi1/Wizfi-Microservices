@@ -6,9 +6,10 @@ app.use(express.json());
 
 // Fake in-memory user data
 const users = [
-  { id: 1, username: 'admin', name: 'Admin User' },
-  { id: 2, username: 'wizfi', name: 'Wizfi Wisdom' }
+  { id: 1, username: 'admin', password: 'admin123', name: 'Admin User' },
+  { id: 2, username: 'wizfi', password: 'wizfi123', name: 'Wizfi Wisdom' }
 ];
+
 
 // Fetch all users
 app.get('/users', (req, res) => {

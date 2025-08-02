@@ -18,7 +18,8 @@ app.post('/login', async (req, res) => {
     const userRes = await axios.get(`${process.env.USER_SERVICE_URL}/users/${username}`);
     const user = userRes.data;
 
-    if (password !== 'password') {
+    if (password !== user.password) {
+
       return res.status(401).json({ error: 'Invalid password' });
     }
 
