@@ -1,0 +1,5 @@
+<h2>Welcome, <%= user.username %>!</h2>
+<p>Your user ID: <%= user.id %></p>
+<h3>Dashboard Data:</h3>
+<pre><%= JSON.stringify(data, null, 2) %></pre>
+<a href="/frontend/logout">Logout</a>

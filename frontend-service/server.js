@@ -1,34 +1,71 @@
 const express = require('express');
+const session = require('express-session');
 const axios = require('axios');
+const path = require('path');
 const dotenv = require('dotenv');
 
 dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 3007;
 
-app.use(express.json());
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-app.get('/frontend', (req, res) => {
-  res.send(`<h1>Welcome to Wizfi Microservices UI</h1>`);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(session({
+  secret: 'wizfi-secret',
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// Show login page
+app.get('/frontend/login', (req, res) => {
+  res.render('login', { error: null });
 });
 
-app.get('/frontend/dashboard', async (req, res) => {
-  try {
-    const jwt = req.headers.authorization;
+// Submit login form
+app.post('/frontend/login', async (req, res) => {
+  const { username, password } = req.body;
 
-    const adminRes = await axios.get('https://wizfiservices.duckdns.org/admin/dashboard', {
-      headers: { Authorization: jwt }
+  try {
+    const loginRes = await axios.post(`${process.env.AUTH_SERVICE_URL}/login`, {
+      username,
+      password,
     });
 
-    res.json(adminRes.data);
+    req.session.token = loginRes.data.token;
+    req.session.user = loginRes.data.user;
+    res.redirect('/frontend/dashboard');
   } catch (err) {
-    console.error('Frontend failed to load dashboard:', err.message);
+    res.render('login', { error: 'Invalid credentials' });
+  }
+});
+
+// Protected dashboard
+app.get('/frontend/dashboard', async (req, res) => {
+  if (!req.session.token) return res.redirect('/frontend/login');
+
+  try {
+    const dashRes = await axios.get(`${process.env.ADMIN_SERVICE_URL}/dashboard`, {
+      headers: {
+        Authorization: `Bearer ${req.session.token}`
+      }
+    });
+
+    res.render('dashboard', {
+      user: req.session.user,
+      data: dashRes.data
+    });
+  } catch (err) {
     res.status(500).send('Failed to load dashboard');
   }
 });
 
-app.get('/frontend/health', (req, res) => res.send('Frontend is healthy'));
+// Health
+app.get('/frontend/health', (req, res) => res.send('Frontend healthy'));
 
 app.listen(PORT, () => {
   console.log(`Frontend running on port ${PORT}`);
