@@ -8,7 +8,7 @@ linux-amd64/
 *.tar.gz
 *.zip
 *.exe
-
+secrets/
 # Node
 node_modules/
 npm-debug.log*
@@ -83,3 +83,6 @@ values.yaml
 duckdns-update.sh
 
 duckdns-cronjob.yaml
+
+wizfi-new-key
+*.pub

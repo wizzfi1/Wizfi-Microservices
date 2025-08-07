@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: wizfi-tls
   issuerRef:
-    name: letsencrypt-duckdns
+    name: letsencrypt-http      
     kind: ClusterIssuer
   dnsNames:
     - wizfiservices.duckdns.org

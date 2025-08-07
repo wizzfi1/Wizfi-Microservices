@@ -14,7 +14,7 @@ services:
       - USER_SERVICE_URL=http://user-service:3001
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js
     depends_on:
       - user-service
 
@@ -24,7 +24,7 @@ services:
       - "3001:3001"
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js
 
   billing-service:
     build: ./billing-service
@@ -32,7 +32,7 @@ services:
       - "3002:3002"
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js
 
   payments-service:
     build: ./payments-service
@@ -40,7 +40,7 @@ services:
       - "3003:3003"
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js
 
   notifications-service:
     build: ./notifications-service
@@ -48,7 +48,7 @@ services:
       - "3004:3004"
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js
 
   analytics-service:
     build: ./analytics-service
@@ -56,7 +56,7 @@ services:
       - "3005:3005"
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js
 
   admin-service:
     build: ./admin-service
@@ -64,7 +64,7 @@ services:
       - "3006:3006"
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js
 
   frontend-service:
     build: ./frontend-service
@@ -72,4 +72,4 @@ services:
       - "3007:3007"
     secrets:
       - jwt_secret
-    entrypoint: sh -c "export JWT_SECRET=$(cat /run/secrets/jwt_secret) && node server.js"
+    command: node server.js

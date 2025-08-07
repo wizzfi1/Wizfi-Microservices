@@ -1,0 +1,2 @@
+#!/bin/bash
+nohup ~/duckdns/update.sh > ~/duckdns/log.txt 2>&1 &
