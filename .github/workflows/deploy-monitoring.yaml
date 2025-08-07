@@ -12,20 +12,9 @@ jobs:
   deploy-monitoring:
     runs-on: ubuntu-latest
 
-    env:
-      AWS_REGION: us-east-1
-      CLUSTER_NAME: wizfi-cluster
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
@@ -33,9 +22,11 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
 
-      - name: Update kubeconfig
+      - name: Set up Kubeconfig
         run: |
-          aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
       - name: Add Prometheus Community Helm Repo
         run: |
