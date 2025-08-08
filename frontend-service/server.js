@@ -21,6 +21,9 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+app.get('/', (req, res) => {
+  res.redirect('/frontend/login');  // Or serve a landing page
+});
 // Show login page
 app.get('/frontend/login', (req, res) => {
   res.render('login', { error: null });
@@ -64,9 +67,13 @@ app.get('/frontend/dashboard', async (req, res) => {
   }
 });
 
-// Health
-app.get('/frontend/health', (req, res) => res.send('Frontend healthy'));
-
+// Health check should return JSON for Kubernetes
+app.get('/frontend/health', (req, res) => {
+  res.json({
+    status: 'UP',
+    details: 'Frontend service healthy'
+  });
+});
 app.listen(PORT, () => {
   console.log(`Frontend running on port ${PORT}`);
 });
