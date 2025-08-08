@@ -7,29 +7,18 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-http
     nginx.ingress.kubernetes.io/app-root: /frontend/login
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      location ~ ^/frontend {
-        proxy_pass http://frontend-service$request_uri;
-      }
       location ~ ^/\.well-known/acme-challenge/ {
-        default_type text/plain;
-        return 200 "$1.$2";
+        proxy_pass http://$host/.well-known/acme-challenge/$1;
       }
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # ACME challenge path must come FIRST
-          - path: /.well-known/acme-challenge/(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: nginx-ingress-ingress-nginx-controller
-                port:
-                  number: 80
-          
-          # Frontend paths
+          # Frontend paths - special handling to preserve /frontend
           - path: /frontend(/|$)(.*)
             pathType: Prefix
             backend:
@@ -37,6 +26,8 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /frontend/$2
 
           # Application paths
           - path: /auth(/|$)(.*)
