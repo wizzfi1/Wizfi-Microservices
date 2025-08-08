@@ -11,6 +11,8 @@ metadata:
         default_type text/plain;
         return 200 "$1.$2";
       }
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
@@ -26,7 +28,7 @@ spec:
                 port:
                   number: 80
           
-          # Frontend paths with proper rewrite
+          # Frontend paths
           - path: /frontend(/|$)(.*)
             pathType: Prefix
             backend:
@@ -34,9 +36,6 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-            # Specific rewrite for frontend paths
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           # Application paths
           - path: /auth(/|$)(.*)
@@ -46,8 +45,6 @@ spec:
                 name: auth-service
                 port:
                   number: 3000
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           - path: /user(/|$)(.*)
             pathType: Prefix
@@ -56,8 +53,6 @@ spec:
                 name: user-service
                 port:
                   number: 3001
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           - path: /billing(/|$)(.*)
             pathType: Prefix
@@ -66,8 +61,6 @@ spec:
                 name: billing-service
                 port:
                   number: 3002
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           - path: /payments(/|$)(.*)
             pathType: Prefix
@@ -76,8 +69,6 @@ spec:
                 name: payments-service
                 port:
                   number: 3003
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           - path: /notify(/|$)(.*)
             pathType: Prefix
@@ -86,8 +77,6 @@ spec:
                 name: notifications-service
                 port:
                   number: 3004
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           - path: /analytics(/|$)(.*)
             pathType: Prefix
@@ -96,8 +85,6 @@ spec:
                 name: analytics-service
                 port:
                   number: 3005
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           - path: /admin(/|$)(.*)
             pathType: Prefix
@@ -106,19 +93,15 @@ spec:
                 name: admin-service
                 port:
                   number: 3006
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
           # Default path (root) redirects to frontend
-          - path: /()(.*)
+          - path: /(.*)
             pathType: Prefix
             backend:
               service:
                 name: frontend-service
                 port:
                   number: 80
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /$2
 
   tls:
     - hosts:
