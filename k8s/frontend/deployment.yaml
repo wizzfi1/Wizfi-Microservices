@@ -26,7 +26,9 @@ spec:
             - name: PORT
               value: "3007"
             - name: HOST
-              value: "0.0.0.0"  # Added to ensure external access
+              value: "0.0.0.0"
+            - name: BASE_PATH  # Added to match server.js configuration
+              value: "/frontend"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -35,23 +37,33 @@ spec:
             - name: AUTH_SERVICE_URL
               value: "http://auth-service:3000"  
             - name: ADMIN_SERVICE_URL
-              value: "http://admin-service:3006"  
+              value: "http://admin-service:3006"
           livenessProbe:
             httpGet:
-              path: /frontend/health
+              path: /health  # Changed to use root health endpoint
               port: 3007
-            initialDelaySeconds: 30  # Increased for startup time
+            initialDelaySeconds: 30
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /frontend/health
+              path: /health  # Changed to use root health endpoint
               port: 3007
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
           resources:
             requests:
               memory: "512Mi"
               cpu: "500m"
             limits:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "1Gi"  # Increased limit for stability
+              cpu: "1000m"
+          volumeMounts:
+            - name: static-assets
+              mountPath: /app/public
+      volumes:
+        - name: static-assets
+          emptyDir: {}
