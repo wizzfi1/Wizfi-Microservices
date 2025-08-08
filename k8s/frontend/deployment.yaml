@@ -21,31 +21,33 @@ spec:
         - name: frontend-service
           image: wizfi/frontend-service:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 3007  
           env:
             - name: PORT
               value: "3007"
+            - name: HOST
+              value: "0.0.0.0"  # Added to ensure external access
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_SECRET
             - name: AUTH_SERVICE_URL
-              value: http://auth-service.wizfi.svc.cluster.local:3000  
+              value: "http://auth-service:3000"  
             - name: ADMIN_SERVICE_URL
-              value: http://admin-service.wizfi.svc.cluster.local:3006
+              value: "http://admin-service:3006"  
           livenessProbe:
             httpGet:
               path: /frontend/health
               port: 3007
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30  # Increased for startup time
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /frontend/health
               port: 3007
             initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 5
           resources:
             requests:
               memory: "512Mi"
