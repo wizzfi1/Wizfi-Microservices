@@ -21,7 +21,7 @@ spec:
         - name: frontend-service
           image: wizfi/frontend-service:latest
           ports:
-            - containerPort: 3007
+            - containerPort: 3000
           env:
             - name: PORT
               value: "3007"
@@ -31,7 +31,7 @@ spec:
                   name: jwt-secret
                   key: JWT_SECRET
             - name: AUTH_SERVICE_URL
-              value: http://auth-service.wizfi.svc.cluster.local:3001
+              value: http://auth-service.wizfi.svc.cluster.local:3000  
             - name: ADMIN_SERVICE_URL
               value: http://admin-service.wizfi.svc.cluster.local:3006
           livenessProbe:
