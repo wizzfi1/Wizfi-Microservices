@@ -9,6 +9,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3007;
 
+// Configure base path from environment or use '/frontend' as default
+const BASE_PATH = process.env.BASE_PATH || '';
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -21,16 +24,26 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-app.get('/', (req, res) => {
-  res.redirect('/frontend/login');  // Or serve a landing page
+// Health check at root path for Kubernetes probes
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'UP',
+    details: 'Frontend service healthy'
+  });
 });
+
+// Root redirect - now using BASE_PATH
+app.get('/', (req, res) => {
+  res.redirect(`${BASE_PATH}/login`);
+});
+
 // Show login page
-app.get('/frontend/login', (req, res) => {
+app.get(`${BASE_PATH}/login`, (req, res) => {
   res.render('login', { error: null });
 });
 
 // Submit login form
-app.post('/frontend/login', async (req, res) => {
+app.post(`${BASE_PATH}/login`, async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -41,15 +54,15 @@ app.post('/frontend/login', async (req, res) => {
 
     req.session.token = loginRes.data.token;
     req.session.user = loginRes.data.user;
-    res.redirect('/frontend/dashboard');
+    res.redirect(`${BASE_PATH}/dashboard`);
   } catch (err) {
     res.render('login', { error: 'Invalid credentials' });
   }
 });
 
 // Protected dashboard
-app.get('/frontend/dashboard', async (req, res) => {
-  if (!req.session.token) return res.redirect('/frontend/login');
+app.get(`${BASE_PATH}/dashboard`, async (req, res) => {
+  if (!req.session.token) return res.redirect(`${BASE_PATH}/login`);
 
   try {
     const dashRes = await axios.get(`${process.env.ADMIN_SERVICE_URL}/dashboard`, {
@@ -67,13 +80,15 @@ app.get('/frontend/dashboard', async (req, res) => {
   }
 });
 
-// Health check should return JSON for Kubernetes
-app.get('/frontend/health', (req, res) => {
+// Additional health check at prefixed path for backward compatibility
+app.get(`${BASE_PATH}/health`, (req, res) => {
   res.json({
     status: 'UP',
     details: 'Frontend service healthy'
   });
 });
+
 app.listen(PORT, () => {
   console.log(`Frontend running on port ${PORT}`);
+  console.log(`Using base path: '${BASE_PATH}'`);
 });
