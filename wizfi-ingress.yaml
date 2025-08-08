@@ -10,7 +10,9 @@ metadata:
       location ~ ^/\.well-known/acme-challenge/ {
         proxy_pass http://$host/.well-known/acme-challenge/$1;
       }
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+      location ~ ^/frontend {
+        proxy_pass http://frontend-service$request_uri;
+      }
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
@@ -18,7 +20,7 @@ spec:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # Frontend paths - special handling to preserve /frontend
+          # Frontend paths
           - path: /frontend(/|$)(.*)
             pathType: Prefix
             backend:
@@ -26,10 +28,8 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /frontend/$2
 
-          # Application paths
+          # Other service paths
           - path: /auth(/|$)(.*)
             pathType: Prefix
             backend:
@@ -86,7 +86,7 @@ spec:
                 port:
                   number: 3006
 
-          # Default path (root) redirects to frontend
+          # Root path
           - path: /(.*)
             pathType: Prefix
             backend:
