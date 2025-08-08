@@ -11,7 +11,7 @@ metadata:
         proxy_pass http://$host/.well-known/acme-challenge/$1;
       }
       location ~ ^/frontend {
-        proxy_pass http://frontend-service$request_uri;
+        proxy_pass http://frontend-service:80$request_uri;
       }
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
