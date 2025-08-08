@@ -9,13 +9,27 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-http"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-
+    # Critical addition for ACME challenges
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      location ~ ^/\.well-known/acme-challenge/(.*)$ {
+        default_type text/plain;
+        return 200 "$1.$2";
+      }
 spec:
   ingressClassName: nginx
   rules:
     - host: wizfiservices.duckdns.org
       http:
         paths:
+          # ACME challenge path must come FIRST
+          - path: /.well-known/acme-challenge/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nginx-ingress-ingress-nginx-controller
+                port:
+                  number: 80
+          # Application paths
           - path: /auth(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
