@@ -6,29 +6,32 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-http
     nginx.ingress.kubernetes.io/app-root: /frontend/login
-    # Explicit configuration for frontend paths
-    nginx.ingress.kubernetes.io/server-snippet: |
-      location ~ ^/frontend {
-        proxy_pass http://frontend-service.wizfi.svc.cluster.local:80$request_uri;
-        proxy_set_header Host $host;
-        proxy_set_header X-Original-URI $request_uri;
-        proxy_set_header X-Real-IP $remote_addr;
-      }
+    # Remove all rewrite rules and use exact path matching
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Simplified configuration without snippets
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # Frontend path - catch-all prefix
-          - path: /frontend
-            pathType: Prefix
+          # Frontend paths - exact matches
+          - path: /frontend/login
+            pathType: Exact
             backend:
               service:
                 name: frontend-service
                 port:
                   number: 80
-          - path: /frontend/
+          - path: /frontend/health
+            pathType: Exact
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
+          - path: /frontend
             pathType: Prefix
             backend:
               service:
