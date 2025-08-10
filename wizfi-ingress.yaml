@@ -6,12 +6,10 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-http
     nginx.ingress.kubernetes.io/app-root: /frontend/login
-    # Disable all automatic rewrites
-    nginx.ingress.kubernetes.io/rewrite-target: /
     # Explicit configuration for frontend paths
-    nginx.ingress.kubernetes.io/configuration-snippet: |
+    nginx.ingress.kubernetes.io/server-snippet: |
       location ~ ^/frontend {
-        proxy_pass http://frontend-service$request_uri;
+        proxy_pass http://frontend-service.wizfi.svc.cluster.local:80$request_uri;
         proxy_set_header Host $host;
         proxy_set_header X-Original-URI $request_uri;
         proxy_set_header X-Real-IP $remote_addr;
