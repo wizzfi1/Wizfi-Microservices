@@ -8,9 +8,10 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3007;
+const HOST = process.env.HOST || '0.0.0.0';
 
 // Configure base path from environment or use '/frontend' as default
-const BASE_PATH = process.env.BASE_PATH || '';
+const BASE_PATH = process.env.BASE_PATH || '/frontend';
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -24,25 +25,25 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-// Health check at root path for Kubernetes probes
-app.get('/health', (req, res) => {
+// Unified health check
+app.get(`${BASE_PATH}/health`, (req, res) => {
   res.json({
     status: 'UP',
     details: 'Frontend service healthy'
   });
 });
 
-// Root redirect - now using BASE_PATH
+// Root redirect
 app.get('/', (req, res) => {
   res.redirect(`${BASE_PATH}/login`);
 });
 
-// Show login page
+// Login page
 app.get(`${BASE_PATH}/login`, (req, res) => {
   res.render('login', { error: null });
 });
 
-// Submit login form
+// Login submit
 app.post(`${BASE_PATH}/login`, async (req, res) => {
   const { username, password } = req.body;
 
@@ -60,7 +61,7 @@ app.post(`${BASE_PATH}/login`, async (req, res) => {
   }
 });
 
-// Protected dashboard
+// Dashboard
 app.get(`${BASE_PATH}/dashboard`, async (req, res) => {
   if (!req.session.token) return res.redirect(`${BASE_PATH}/login`);
 
@@ -80,15 +81,6 @@ app.get(`${BASE_PATH}/dashboard`, async (req, res) => {
   }
 });
 
-// Additional health check at prefixed path for backward compatibility
-app.get(`${BASE_PATH}/health`, (req, res) => {
-  res.json({
-    status: 'UP',
-    details: 'Frontend service healthy'
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`Frontend running on port ${PORT}`);
-  console.log(`Using base path: '${BASE_PATH}'`);
+app.listen(PORT, HOST, () => {
+  console.log(`Frontend running on http://${HOST}:${PORT}${BASE_PATH}`);
 });
