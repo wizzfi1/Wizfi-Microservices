@@ -21,13 +21,13 @@ spec:
         - name: frontend-service
           image: wizfi/frontend-service:latest
           ports:
-            - containerPort: 3007  
+            - containerPort: 3007
           env:
             - name: PORT
               value: "3007"
             - name: HOST
               value: "0.0.0.0"
-            - name: BASE_PATH  # Added to match server.js configuration
+            - name: BASE_PATH
               value: "/frontend"
             - name: JWT_SECRET
               valueFrom:
@@ -35,12 +35,12 @@ spec:
                   name: jwt-secret
                   key: JWT_SECRET
             - name: AUTH_SERVICE_URL
-              value: "http://auth-service:3000"  
+              value: "https://wizfiservices.duckdns.org/auth"
             - name: ADMIN_SERVICE_URL
-              value: "http://admin-service:3006"
+              value: "https://wizfiservices.duckdns.org/admin"
           livenessProbe:
             httpGet:
-              path: /health  # Changed to use root health endpoint
+              path: /frontend/health
               port: 3007
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -48,7 +48,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /health  # Changed to use root health endpoint
+              path: /frontend/health
               port: 3007
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -59,7 +59,7 @@ spec:
               memory: "512Mi"
               cpu: "500m"
             limits:
-              memory: "1Gi"  # Increased limit for stability
+              memory: "1Gi"
               cpu: "1000m"
           volumeMounts:
             - name: static-assets
