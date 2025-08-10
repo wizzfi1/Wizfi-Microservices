@@ -10,16 +10,11 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
     # Explicit configuration for frontend paths
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      location = /frontend/login {
-        proxy_pass http://frontend-service:80/frontend/login;
+      location ~ ^/frontend {
+        proxy_pass http://frontend-service$request_uri;
         proxy_set_header Host $host;
         proxy_set_header X-Original-URI $request_uri;
         proxy_set_header X-Real-IP $remote_addr;
-      }
-      location /frontend/ {
-        proxy_pass http://frontend-service:80;
-        proxy_set_header Host $host;
-        proxy_set_header X-Original-URI $request_uri;
       }
 spec:
   ingressClassName: nginx
@@ -27,9 +22,9 @@ spec:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # Frontend paths
-          - path: /frontend/login
-            pathType: Exact
+          # Frontend path - catch-all prefix
+          - path: /frontend
+            pathType: Prefix
             backend:
               service:
                 name: frontend-service
