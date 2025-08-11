@@ -6,6 +6,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
+    type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
       maxSurge: 1
@@ -49,3 +50,4 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "250m"
+

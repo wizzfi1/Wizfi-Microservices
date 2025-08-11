@@ -7,5 +7,6 @@ spec:
   selector:
     app: admin-service
   ports:
-    - port: 3006
+    - name: http
+      port: 80
       targetPort: 3006

@@ -7,5 +7,6 @@ spec:
   selector:
     app: notifications-service
   ports:
-    - port: 3004
+    - name: http
+      port: 80
       targetPort: 3004

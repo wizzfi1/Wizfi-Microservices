@@ -6,6 +6,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
+    type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
       maxSurge: 1
@@ -34,10 +35,21 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_SECRET
+            # ✅ Use internal cluster URLs for backend APIs
             - name: AUTH_SERVICE_URL
-              value: "https://wizfiservices.duckdns.org/auth"
+              value: "http://auth-service:3000"
             - name: ADMIN_SERVICE_URL
-              value: "https://wizfiservices.duckdns.org/admin"
+              value: "http://admin-service:3006"
+            - name: USER_SERVICE_URL
+              value: "http://user-service:3001"
+            - name: BILLING_SERVICE_URL
+              value: "http://billing-service:3002"
+            - name: PAYMENTS_SERVICE_URL
+              value: "http://payments-service:3003"
+            - name: NOTIFICATIONS_SERVICE_URL
+              value: "http://notifications-service:3004"
+            - name: ANALYTICS_SERVICE_URL
+              value: "http://analytics-service:3005"
           livenessProbe:
             httpGet:
               path: /frontend/health
@@ -67,3 +79,4 @@ spec:
       volumes:
         - name: static-assets
           emptyDir: {}
+
