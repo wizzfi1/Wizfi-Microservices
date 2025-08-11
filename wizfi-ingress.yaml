@@ -9,7 +9,6 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     # Debug header
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      add_header X-Served-By $host;
       add_header X-Rewritten-To "/$2" always;
 spec:
   ingressClassName: nginx
@@ -17,7 +16,8 @@ spec:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          - path: /frontend
+          # Frontend: /frontend/(.*) → /frontend/(.*)
+          - path: /frontend(/|$)(.*)
             pathType: Prefix
             backend:
               service:
@@ -25,7 +25,7 @@ spec:
                 port:
                   number: 80
 
-          # Auth: /auth/login → /login
+          # Auth: /auth/(.*) → /(.*) → /login
           - path: /auth/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -34,7 +34,7 @@ spec:
                 port:
                   number: 80
 
-          # User: /user/users → /users
+          # User: /user/(.*) → /(.*) → /users
           - path: /user/(.*)
             pathType: ImplementationSpecific
             backend:

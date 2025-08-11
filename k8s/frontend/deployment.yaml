@@ -35,7 +35,7 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_SECRET
-            # ✅ Use internal cluster URLs for backend APIs
+            #  Use internal cluster URLs for backend APIs
             - name: AUTH_SERVICE_URL
               value: "http://auth-service"
             - name: ADMIN_SERVICE_URL
