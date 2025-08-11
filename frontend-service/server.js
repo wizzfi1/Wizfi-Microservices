@@ -9,13 +9,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3007;
 const HOST = process.env.HOST || '0.0.0.0';
-
-// Configure base path from environment or use '/frontend' as default
 const BASE_PATH = process.env.BASE_PATH || '/frontend';
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+// ✅ 1. Add a SIMPLE, STATELESS health check BEFORE any middleware
+app.get('/health', (req, res) => {
+  res.json({ status: 'UP', details: 'Frontend service healthy' });
+});
 
+// Also keep the BASE_PATH version, but still before session
+app.get(`${BASE_PATH}/health`, (req, res) => {
+  res.json({ status: 'UP', details: 'Frontend service healthy' });
+});
+
+// ✅ 2. Now apply body parsing and session middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -23,15 +29,13 @@ app.use(session({
   secret: 'wizfi-secret',
   resave: false,
   saveUninitialized: true,
+  // Optional: add secure settings in production
+  // cookie: { secure: true, httpOnly: true, maxAge: 3600000 }
 }));
 
-// Unified health check
-app.get(`${BASE_PATH}/health`, (req, res) => {
-  res.json({
-    status: 'UP',
-    details: 'Frontend service healthy'
-  });
-});
+// View engine setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Root redirect
 app.get('/', (req, res) => {
@@ -46,13 +50,11 @@ app.get(`${BASE_PATH}/login`, (req, res) => {
 // Login submit
 app.post(`${BASE_PATH}/login`, async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const loginRes = await axios.post(`${process.env.AUTH_SERVICE_URL}/login`, {
       username,
       password,
     });
-
     req.session.token = loginRes.data.token;
     req.session.user = loginRes.data.user;
     res.redirect(`${BASE_PATH}/dashboard`);
@@ -64,14 +66,12 @@ app.post(`${BASE_PATH}/login`, async (req, res) => {
 // Dashboard
 app.get(`${BASE_PATH}/dashboard`, async (req, res) => {
   if (!req.session.token) return res.redirect(`${BASE_PATH}/login`);
-
   try {
     const dashRes = await axios.get(`${process.env.ADMIN_SERVICE_URL}/dashboard`, {
       headers: {
         Authorization: `Bearer ${req.session.token}`
       }
     });
-
     res.render('dashboard', {
       user: req.session.user,
       data: dashRes.data

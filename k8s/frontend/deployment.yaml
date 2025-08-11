@@ -52,7 +52,7 @@ spec:
               value: "http://analytics-service:3005"
           livenessProbe:
             httpGet:
-              path: /frontend/health
+              path: /health
               port: 3007
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -60,7 +60,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /frontend/health
+              path: /health
               port: 3007
             initialDelaySeconds: 5
             periodSeconds: 5
