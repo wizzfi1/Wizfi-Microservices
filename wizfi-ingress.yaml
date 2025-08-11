@@ -1,13 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-meta
+metadata:
   name: wizfi-ingress
   namespace: wizfi
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-http
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-    # Debug header
     nginx.ingress.kubernetes.io/configuration-snippet: |
       add_header X-Served-By $host;
       add_header X-Rewritten-To "/$2" always;
@@ -24,8 +23,6 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-
-          # Auth: /auth/login → /login
           - path: /auth/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -33,8 +30,6 @@ spec:
                 name: auth-service
                 port:
                   number: 80
-
-          # User: /user/users → /users
           - path: /user/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -42,8 +37,6 @@ spec:
                 name: user-service
                 port:
                   number: 80
-
-          # Add others...
           - path: /billing/(.*)
             pathType: ImplementationSpecific
             backend:
