@@ -7,13 +7,14 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-http
     nginx.ingress.kubernetes.io/app-root: /frontend/login
     nginx.ingress.kubernetes.io/use-regex: "true"
+    # ✅ Add rewrite to strip /auth, /user, etc.
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # Frontend paths - keep /frontend in request
           - path: /frontend
             pathType: Prefix
             backend:
@@ -22,23 +23,23 @@ spec:
                 port:
                   number: 80
 
-          # Auth
+          # Auth: /auth/login → /login
           - path: /auth(/|$)(.*)
             pathType: Prefix
             backend:
               service:
                 name: auth-service
                 port:
-                  number: 3000
-          
-          # User
+                  number: 80
+
+          # User: /user/users → /users
           - path: /user(/|$)(.*)
             pathType: Prefix
             backend:
               service:
                 name: user-service
                 port:
-                  number: 3001
+                  number: 80
 
           # Billing
           - path: /billing(/|$)(.*)
@@ -47,7 +48,7 @@ spec:
               service:
                 name: billing-service
                 port:
-                  number: 3002
+                  number: 80
 
           # Payments
           - path: /payments(/|$)(.*)
@@ -56,7 +57,7 @@ spec:
               service:
                 name: payments-service
                 port:
-                  number: 3003
+                  number: 80
 
           # Notifications
           - path: /notify(/|$)(.*)
@@ -65,7 +66,7 @@ spec:
               service:
                 name: notifications-service
                 port:
-                  number: 3004
+                  number: 80
 
           # Analytics
           - path: /analytics(/|$)(.*)
@@ -74,7 +75,7 @@ spec:
               service:
                 name: analytics-service
                 port:
-                  number: 3005
+                  number: 80
 
           # Admin
           - path: /admin(/|$)(.*)
@@ -83,7 +84,7 @@ spec:
               service:
                 name: admin-service
                 port:
-                  number: 3006
+                  number: 80
 
   tls:
     - hosts:
