@@ -1,14 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-metadata:
+meta
   name: wizfi-ingress
   namespace: wizfi
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-http
-    #nginx.ingress.kubernetes.io/app-root: /frontend/login
     nginx.ingress.kubernetes.io/use-regex: "true"
-    # ✅ Add rewrite to strip /auth, /user, etc.
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Debug header
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Served-By $host;
+      add_header X-Rewritten-To "/$2" always;
 spec:
   ingressClassName: nginx
   rules:
@@ -24,8 +26,8 @@ spec:
                   number: 80
 
           # Auth: /auth/login → /login
-          - path: /auth(/|$)(.*)
-            pathType: Prefix
+          - path: /auth/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-service
@@ -33,59 +35,50 @@ spec:
                   number: 80
 
           # User: /user/users → /users
-          - path: /user(/|$)(.*)
-            pathType: Prefix
+          - path: /user/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: user-service
                 port:
                   number: 80
 
-          # Billing
-          - path: /billing(/|$)(.*)
-            pathType: Prefix
+          # Add others...
+          - path: /billing/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: billing-service
                 port:
                   number: 80
-
-          # Payments
-          - path: /payments(/|$)(.*)
-            pathType: Prefix
+          - path: /payments/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: payments-service
                 port:
                   number: 80
-
-          # Notifications
-          - path: /notify(/|$)(.*)
-            pathType: Prefix
+          - path: /notify/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: notifications-service
                 port:
                   number: 80
-
-          # Analytics
-          - path: /analytics(/|$)(.*)
-            pathType: Prefix
+          - path: /analytics/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: analytics-service
                 port:
                   number: 80
-
-          # Admin
-          - path: /admin(/|$)(.*)
-            pathType: Prefix
+          - path: /admin/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: admin-service
                 port:
                   number: 80
-
   tls:
     - hosts:
         - wizfiservices.duckdns.org
