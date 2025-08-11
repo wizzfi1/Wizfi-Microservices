@@ -7,5 +7,6 @@ spec:
   selector:
     app: payments-service
   ports:
-    - port: 3003
+    - name: http
+      port: 80
       targetPort: 3003
