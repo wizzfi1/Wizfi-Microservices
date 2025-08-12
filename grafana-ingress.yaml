@@ -4,12 +4,9 @@ metadata:
   name: monitoring-grafana
   namespace: monitoring
   annotations:
-    # Enable TLS with Let's Encrypt
     cert-manager.io/cluster-issuer: "letsencrypt-http"
-    # Redirect to HTTPS
+    acme.cert-manager.io/http01-edit-in-place: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    # Optional: enforce TLS
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   rules:
