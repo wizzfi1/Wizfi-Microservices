@@ -1,6 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-metadata:
+meta
   name: wizfi-ingress
   namespace: wizfi
   annotations:
@@ -43,7 +43,7 @@ spec:
                 port:
                   number: 80
 
-          # Add others...
+          # Billing
           - path: /billing/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -51,6 +51,8 @@ spec:
                 name: billing-service
                 port:
                   number: 80
+
+          # Payments
           - path: /payments/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -58,6 +60,8 @@ spec:
                 name: payments-service
                 port:
                   number: 80
+
+          # Notifications
           - path: /notify/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -65,6 +69,8 @@ spec:
                 name: notifications-service
                 port:
                   number: 80
+
+          # Analytics
           - path: /analytics/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -72,6 +78,8 @@ spec:
                 name: analytics-service
                 port:
                   number: 80
+
+          # Admin
           - path: /admin/(.*)
             pathType: ImplementationSpecific
             backend:
