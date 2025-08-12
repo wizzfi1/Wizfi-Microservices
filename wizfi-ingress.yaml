@@ -16,7 +16,6 @@ spec:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # Frontend: /frontend/(.*) → /frontend/(.*)
           - path: /frontend(/|$)(.*)
             pathType: Prefix
             backend:
@@ -24,8 +23,7 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-
-          # Auth: /auth/(.*) → /(.*) → /login
+         
           - path: /auth/(.*)
             pathType: ImplementationSpecific
             backend:
