@@ -4,22 +4,18 @@ metadata:
   name: monitoring-grafana
   namespace: monitoring
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # Enable TLS with Let's Encrypt
     cert-manager.io/cluster-issuer: "letsencrypt-http"
-    acme.cert-manager.io/http01-edit-in-place: "true"
+    # Redirect to HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # Optional: enforce TLS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
+  ingressClassName: nginx
   rules:
     - host: wizfi-grafana.duckdns.org
       http:
         paths:
-          #  ACME path must use ImplementationSpecific
-          - path: /.well-known/acme-challenge/
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: dummy-service
-                port:
-                  number: 80
           - path: /
             pathType: Prefix
             backend:
