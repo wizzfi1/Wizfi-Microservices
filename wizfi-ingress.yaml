@@ -7,6 +7,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-http
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Debug header
     nginx.ingress.kubernetes.io/configuration-snippet: |
       add_header X-Rewritten-To "/$2" always;
 spec:
@@ -15,7 +16,6 @@ spec:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # Frontend: /frontend/(.*) → /frontend/(.*)
           - path: /frontend(/|$)(.*)
             pathType: Prefix
             backend:
@@ -23,11 +23,7 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-<<<<<<< HEAD
-=======
-
-          # Auth: /auth/(.*) → /(.*) → /login
->>>>>>> 75f0cd05b748410b71736667fc22ee7e292d01d6
+         
           - path: /auth/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -35,11 +31,8 @@ spec:
                 name: auth-service
                 port:
                   number: 80
-<<<<<<< HEAD
-=======
 
           # User: /user/(.*) → /(.*) → /users
->>>>>>> 75f0cd05b748410b71736667fc22ee7e292d01d6
           - path: /user/(.*)
             pathType: ImplementationSpecific
             backend:
@@ -47,11 +40,8 @@ spec:
                 name: user-service
                 port:
                   number: 80
-<<<<<<< HEAD
-=======
 
           # Billing
->>>>>>> 5a00f6ecc0c9410289716cd008f20c55fbe5db9c
           - path: /billing/(.*)
             pathType: ImplementationSpecific
             backend:
