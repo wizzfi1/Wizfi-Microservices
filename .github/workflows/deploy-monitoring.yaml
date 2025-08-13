@@ -25,7 +25,7 @@ jobs:
       - name: Set up Kubeconfig
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+          echo "${{ secrets.K3S_KUBECONFIG_B64 }}" | base64 -d > ~/.kube/config
           chmod 600 $HOME/.kube/config
 
       - name: Add Prometheus Community Helm Repo
