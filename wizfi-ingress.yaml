@@ -4,17 +4,29 @@ metadata:
   name: wizfi-ingress
   namespace: wizfi
   annotations:
-    #cert-manager.io/cluster-issuer: letsencrypt-http
+    cert-manager.io/cluster-issuer: letsencrypt-http  # Uncommented and active
+    cert-manager.io/issue-temporary-certificate: "true"  # Added for immediate TLS
     nginx.ingress.kubernetes.io/use-regex: "true"
-    # Only apply rewrite to /auth, /user, etc., NOT /frontend
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Force HTTPS
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"  # Explicit backend protocol
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
+  tls:  # Moved to top of spec for clarity
+  - hosts:
+    - wizfiservices.duckdns.org
+    secretName: wizfi-tls
   rules:
     - host: wizfiservices.duckdns.org
       http:
         paths:
-          # Frontend: Pass through full path — NO REWRITE
+          - path: /.well-known/acme-challenge/
+            pathType: Prefix
+            backend:
+              service:
+                name: cert-manager-solver
+                port:
+                  number: 8089
           - path: /frontend(/|$)(.*)
             pathType: Prefix
             backend:
@@ -22,8 +34,6 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-
-          # Auth: /auth/login → /login
           - path: /auth(/|$)(.*)
             pathType: Prefix
             backend:
@@ -77,7 +87,4 @@ spec:
                 name: admin-service
                 port:
                   number: 80
-  tls:
-    - hosts:
-        - wizfiservices.duckdns.org
-      secretName: wizfi-tls
+ 
