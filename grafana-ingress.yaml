@@ -4,23 +4,30 @@ metadata:
   name: monitoring-grafana
   namespace: monitoring
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-http"
+    cert-manager.io/cluster-issuer: letsencrypt-http
     acme.cert-manager.io/http01-edit-in-place: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
-  rules:
-    - host: wizfi-grafana.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: monitoring-grafana
-                port:
-                  number: 80
   tls:
-    - hosts:
-        - wizfi-grafana.duckdns.org
-      secretName: grafana-tls
+  - hosts:
+    - wizfi-grafana.duckdns.org
+    secretName: grafana-tls
+  rules:
+  - host: wizfi-grafana.duckdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-grafana
+            port:
+              number: 80
+      - path: /.well-known/acme-challenge/
+        pathType: Prefix
+        backend:
+          service:
+            name: cert-manager-solver
+            port:
+              number: 8089
