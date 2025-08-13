@@ -6,7 +6,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-http
     cert-manager.io/issue-temporary-certificate: "true"
-    acme.cert-manager.io/http01-edit-in-place: "true"  # Let cert-manager handle challenges
+    acme.cert-manager.io/http01-edit-in-place: "true"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
@@ -21,7 +21,6 @@ spec:
   - host: wizfiservices.duckdns.org
     http:
       paths:
-      # Remove the manual ACME challenge path - cert-manager will handle it
       - path: /frontend(/|$)(.*)
         pathType: Prefix
         backend:
@@ -29,7 +28,6 @@ spec:
             name: frontend-service
             port:
               number: 80
-    
       - path: /auth(/|$)(.*)
         pathType: Prefix
         backend:
