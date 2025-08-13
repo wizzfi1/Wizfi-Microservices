@@ -3,7 +3,7 @@ grafana:
   adminPassword: "wizfiadmin"
   service:
     type: ClusterIP
-    port: 80  # Explicitly set port 80
+    port: 80  
   ingress:
     enabled: true
     annotations:
