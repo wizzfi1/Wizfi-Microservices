@@ -18,6 +18,76 @@ spec:
     - wizfiservices.duckdns.org
     secretName: wizfi-tls
   rules:
+    - host: wizfiservices.duckdns.org
+      http:
+        paths:
+          - path: /.well-known/acme-challenge/
+            pathType: Prefix
+            backend:
+              service:
+                name: cert-manager-solver
+                port:
+                  number: 8089
+          - path: /frontend(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
+          - path: /auth(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 80
+
+          # User: /user/users → /users
+          - path: /user(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 80
+
+          # Add others...
+          - path: /billing(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: billing-service
+                port:
+                  number: 80
+          - path: /payments(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: payments-service
+                port:
+                  number: 80
+          - path: /notify(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: notifications-service
+                port:
+                  number: 80
+          - path: /analytics(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: analytics-service
+                port:
+                  number: 80
+          - path: /admin(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: admin-service
+                port:
+                  number: 80
   - host: wizfiservices.duckdns.org
     http:
       paths:
@@ -77,3 +147,4 @@ spec:
             name: admin-service
             port:
               number: 80
+
