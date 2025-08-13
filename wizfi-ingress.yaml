@@ -4,8 +4,8 @@ metadata:
   name: wizfi-ingress
   namespace: wizfi
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-http
-    cert-manager.io/issue-temporary-certificate: "true"
+    #cert-manager.io/cluster-issuer: letsencrypt-http
+    #cert-manager.io/issue-temporary-certificate: "true"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
