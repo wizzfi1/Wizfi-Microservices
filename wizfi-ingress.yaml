@@ -4,8 +4,9 @@ metadata:
   name: wizfi-ingress
   namespace: wizfi
   annotations:
-    #cert-manager.io/cluster-issuer: letsencrypt-http
-    #cert-manager.io/issue-temporary-certificate: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-http
+    cert-manager.io/issue-temporary-certificate: "true"
+    acme.cert-manager.io/http01-edit-in-place: "true"  # Let cert-manager handle challenges
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
@@ -87,3 +88,65 @@ spec:
                 name: admin-service
                 port:
                   number: 80
+  - host: wizfiservices.duckdns.org
+    http:
+      paths:
+      # Remove the manual ACME challenge path - cert-manager will handle it
+      - path: /frontend(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+    
+      - path: /auth(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      - path: /user(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 80
+      - path: /billing(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: billing-service
+            port:
+              number: 80
+      - path: /payments(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: payments-service
+            port:
+              number: 80
+      - path: /notify(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: notifications-service
+            port:
+              number: 80
+      - path: /analytics(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: analytics-service
+            port:
+              number: 80
+      - path: /admin(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: admin-service
+            port:
+              number: 80
+

@@ -10,16 +10,7 @@ spec:
     kind: ClusterIssuer
   dnsNames:
     - wizfiservices.duckdns.org
-    - auth.wizfiservices.duckdns.org
-    - user.wizfiservices.duckdns.org
-    - billing.wizfiservices.duckdns.org
-    - payments.wizfiservices.duckdns.org
-    - notify.wizfiservices.duckdns.org
-    - analytics.wizfiservices.duckdns.org
-    - admin.wizfiservices.duckdns.org
-
+    # Remove subdomains unless you have separate Ingress rules for them
   usages:
     - digital signature
     - key encipherment
-  duration: 2160h 
-  renewBefore: 360h 
