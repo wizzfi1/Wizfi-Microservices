@@ -3,24 +3,18 @@ grafana:
   adminPassword: "wizfiadmin"
   service:
     type: ClusterIP
+    port: 80  # Explicitly set port 80
   ingress:
-    enabled: false
+    enabled: true
     annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-http"
+      acme.cert-manager.io/http01-edit-in-place: "true"
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
       kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: "letsencrypt-duckdns"
     hosts:
       - wizfi-grafana.duckdns.org
+    path: /
     tls:
       - hosts:
           - wizfi-grafana.duckdns.org
         secretName: grafana-tls
-
-prometheus:
-  prometheusSpec:
-    serviceMonitorSelectorNilUsesHelmValues: false
-    podMonitorSelectorNilUsesHelmValues: false
-
-kubePrometheusStack:
-  enabled: true
