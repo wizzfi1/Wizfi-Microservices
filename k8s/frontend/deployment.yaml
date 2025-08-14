@@ -50,6 +50,13 @@ spec:
               value: "http://notifications-service"
             - name: ANALYTICS_SERVICE_URL
               value: "http://analytics-service"
+            - name: DATABASE_URL
+              value: "postgresql://wizfi_user:$(POSTGRES_PASSWORD)@postgresql:5432/wizfi_db"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: POSTGRES_PASSWORD
           livenessProbe:
             httpGet:
               path: /health
