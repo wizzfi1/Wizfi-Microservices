@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: test-alert-rule
+  namespace: monitoring
+spec:
+  groups:
+    - name: test.rules
+      rules:
+        - alert: TestAlert
+          expr: vector(1)
+          for: 10s
+          labels:
+            severity: critical
+          annotations:
+            summary: "Test Alert (should fire immediately)"
+            description: "This is a test alert sent to Slack. Everything is working!"
