@@ -40,7 +40,7 @@ stringData:
             title: "{{ .CommonAnnotations.summary }}"
             title_link: "https://wizfi-grafana.duckdns.org"
             color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
-            api_url: 'https://hooks.slack.com/services/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'
+            api_url: '${process.env.SLACK_WEBHOOK_URL}'
             channel: '#alerts'
             username: 'Prometheus Alert'
             icon_emoji: ':fire:'
@@ -52,7 +52,7 @@ stringData:
             title: "*FIRING*: {{ .CommonAnnotations.summary }}"
             title_link: "https://wizfi-grafana.duckdns.org"
             color: danger
-            api_url: 'https://hooks.slack.com/services/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'
+            api_url: '${process.env.SLACK_WEBHOOK_URL}'
             channel: '#critical-alerts'  # Or '#alerts'
             username: 'Critical Alert'
             icon_emoji: ':skull:'
