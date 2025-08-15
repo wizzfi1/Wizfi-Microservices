@@ -31,15 +31,22 @@ receivers:
         icon_emoji: ':fire:'
 `;
 
+// Properly indent the entire config for stringData
+const indentedConfig = alertmanagerConfig
+  .split('\n')
+  .map(line => '      ' + line)  // 6 spaces total (2 for stringData + 4 for value)
+  .join('\n');
+
 const secretYaml = `apiVersion: v1
 kind: Secret
-meta
+metadata:
   name: alertmanager-config
   namespace: monitoring
 stringData:
   alertmanager.yaml: |
-${alertmanagerConfig.split('\n').map(line => '    ' + line).join('\n')}
+${indentedConfig}
 `;
 
 fs.writeFileSync('alertmanager-config.yaml', secretYaml);
 console.log(" Generated alertmanager-config.yaml from .env");
+console.log(" Apply with: kubectl apply -f alertmanager-config.yaml");
