@@ -1,17 +1,16 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
-metadata:
-  name: test-alert-rule
+meta
+  name: always-fire-alert
   namespace: monitoring
 spec:
   groups:
-    - name: test.rules
+    - name: always-fire.rules
       rules:
-        - alert: TestAlert
+        - alert: AlwaysFire
           expr: vector(1)
-          for: 10s
           labels:
             severity: critical
           annotations:
-            summary: "Test Alert (should fire immediately)"
-            description: "Chill This is a test alert sent to Slack. Everything is working!"
+            summary: "This alert always fires"
+            description: "If you see this, Alertmanager is working"
