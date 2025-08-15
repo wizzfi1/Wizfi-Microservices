@@ -1,0 +1,27 @@
+grafana:
+  enabled: true
+  adminPassword: "wizfiadmin"
+  service:
+    type: ClusterIP
+    port: 80  
+  ingress:
+    enabled: false
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    configSecret: alertmanager-config
+    useExistingSecret: false
+
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-http"
+      acme.cert-manager.io/http01-edit-in-place: "true"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - wizfi-grafana.duckdns.org
+    path: /
+    tls:
+      - hosts:
+          - wizfi-grafana.duckdns.org
+        secretName: grafana-tls

@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+stringData:
+  alertmanager.yaml: |
+    global:
+      resolve_timeout: 5m
+      http_config: {}
+      smtp_hello: localhost
+      smtp_from: ""
+      smtp_auth_username: ""
+      smtp_auth_password: ""
+      smtp_auth_secret: ""
+      smtp_auth_identity: ""
+      smtp_require_tls: true
+      pagerduty_url: https://events.pagerduty.com/v2/enqueue
+      opsgenie_api_url: https://api.opsgenie.com/
+      wechat_api_url: https://qyapi.weixin.qq.com/cgi-bin/
+      victorops_api_url: https://alert.victorops.com/integrations/generic/20131114/alert/
+      telegram_api_url: https://api.telegram.org
+
+    route:
+      group_by: ['alertname', 'cluster']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 1h
+      receiver: 'slack-notifications'
+      routes:
+        - matchers:
+            - severity = critical
+          receiver: 'slack-critical'
+
+    receivers:
+      - name: 'slack-notifications'
+        slack_configs:
+          - send_resolved: true
+            text: "{{ .CommonAnnotations.description }}"
+            title: "{{ .CommonAnnotations.summary }}"
+            title_link: "https://wizfi-grafana.duckdns.org"
+            color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+            api_url: 'https://hooks.slack.com/services/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'
+            channel: '#alerts'
+            username: 'Prometheus Alert'
+            icon_emoji: ':fire:'
+
+      - name: 'slack-critical'
+        slack_configs:
+          - send_resolved: true
+            text: "*Critical Alert*: {{ .CommonAnnotations.description }}"
+            title: "*FIRING*: {{ .CommonAnnotations.summary }}"
+            title_link: "https://wizfi-grafana.duckdns.org"
+            color: danger
+            api_url: 'https://hooks.slack.com/services/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'
+            channel: '#critical-alerts'  # Or '#alerts'
+            username: 'Critical Alert'
+            icon_emoji: ':skull:'
+
+    templates:
+    - '/etc/alertmanager/config/*.tmpl'

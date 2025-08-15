@@ -86,6 +86,6 @@ duckdns-cronjob.yaml
 
 wizfi-new-key
 *.pub
-monitoring/monitoring-values.yaml
+#monitoring/monitoring-values.yaml
 
-alertmanager-config.yaml
+#alertmanager-config.yaml
