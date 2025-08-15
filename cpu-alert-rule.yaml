@@ -13,5 +13,5 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "High CPU usage on {{ $labels.instance }}"
+            summary: "Yo High CPU usage on {{ $labels.instance }}"
             description: "CPU usage is above 1%: {{ $value }}%"

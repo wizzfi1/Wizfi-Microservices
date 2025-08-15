@@ -14,4 +14,4 @@ spec:
             severity: critical
           annotations:
             summary: "Test Alert (should fire immediately)"
-            description: "This is a test alert sent to Slack. Everything is working!"
+            description: "Chill This is a test alert sent to Slack. Everything is working!"
